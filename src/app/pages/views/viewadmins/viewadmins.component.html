@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<h3>Admin List</h3>
+<div id="client-view"></div>
+<div id="table-holder">
+  <table>
+    <tbody>
+      <tr class="head">
+        <td>ID</td>
+        <td>User Name</td>
+        <td>User Role</td>
+        <td>Email</td>
+      </tr>
+      @for (admin of adminList; track admin.id) {
+      <tr>
+        <td>{{ admin.id }}</td>
+        <td>{{ admin.userName }}</td>
+        <td>{{ admin.userRole }}</td>
+        <td>{{ admin.email }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

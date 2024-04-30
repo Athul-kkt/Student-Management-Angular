@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<body>
+  <div class="row">
+    <div class="col-75">
+      <h2>Student Registration Form</h2>
+      <div class="container">
+        <form>
+          <div class="row">
+            <div class="col-50">
+              <label for="fname">First Name</label>
+              <input
+                type="text"
+                [(ngModel)]="student.firstName"
+                name="firstname"
+                placeholder="First Name"
+              />
+              <label>Last Name</label>
+              <input
+                type="text"
+                [(ngModel)]="student.lastName"
+                name="lastname"
+                placeholder="Last Name"
+              />
+              <label> Email</label>
+              <input
+                type="email"
+                [(ngModel)]="student.email"
+                id="email"
+                name="email"
+                placeholder="Email"
+              />
+              <label> Department</label>
+              <input
+                type="text"
+                [(ngModel)]="student.dept"
+                name="department"
+                placeholder="Department"
+              />
+              <label> Date of Birth</label>
+              <input
+                type="date"
+                [(ngModel)]="student.dob"
+                name="dob"
+                placeholder="Date of Birth"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            value="Create"
+            (click)="createStudent()"
+            class="btn"
+          >
+            Create
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>

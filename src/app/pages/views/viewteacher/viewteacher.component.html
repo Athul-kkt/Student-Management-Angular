@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<h3>Teachers List</h3>
+<div id="client-view"></div>
+<div id="table-holder">
+  <table>
+    <tbody>
+      <tr class="head">
+        <td>ID</td>
+        <td>First Name</td>
+        <td>Last Name</td>
+        <td>Email</td>
+        <!-- <td>Attendance</td> -->
+        <td>Department</td>
+        <!-- <td>Class</td> -->
+      </tr>
+      @for (teacher of teachersList; track teacher.id) {
+      <tr>
+        <td>{{ teacher.id }}</td>
+        <td>{{ teacher.firstName }}</td>
+        <td>{{ teacher.lastName }}</td>
+        <td>{{ teacher.email }}</td>
+        <!-- <td>80%</td> -->
+        <td>{{ teacher.dept }}</td>
+        <!-- <td>S4</td> -->
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

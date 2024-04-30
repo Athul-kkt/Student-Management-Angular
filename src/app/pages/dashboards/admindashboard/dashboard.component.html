@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<body>
+  <div class="wrapper">
+    <div class="sidebar">
+      <div id="quick-links" class="sub-group">
+        <h2>Quick Actions</h2>
+        <ul>
+          <li>
+            <button
+              type="button"
+              class="btn btn-11 flex-vh-center"
+              (click)="goToCreateStudent()"
+            >
+              Create Student Profile
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              class="btn btn-11 flex-vh-center"
+              (click)="goToCreateTeacher()"
+            >
+              Create Teacher Profile
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              class="btn btn-11 flex-vh-center"
+              (click)="goToCreateAdmin()"
+            >
+              Create Admin Profile
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div id="views" class="sub-group">
+        <h2>Views</h2>
+        <ul>
+          <li>
+            <button
+              type="button"
+              class="btn btn-11 flex-vh-center"
+              (click)="goTostudentView()"
+            >
+              Students
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              class="btn btn-11 flex-vh-center"
+              (click)="goToteacherView()"
+            >
+              Teachers
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              class="btn btn-11 flex-vh-center"
+              (click)="goToadminView()"
+            >
+              Admins
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="content-holder">
+      <!-- <div id="user-view">
+        <h2>Admin Dashboard</h2>
+      </div> -->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</body>
