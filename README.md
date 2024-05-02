@@ -130,7 +130,6 @@ public class TeacherServiceTest {
 
 
 
-
 package com.example.attendancemanagement.service;
 
 import org.junit.jupiter.api.Test;
@@ -141,7 +140,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -160,26 +158,20 @@ public class StudentServiceTest {
     public void testGetStudentById_Exists() {
         // Prepare data
         long studentId = 1L;
-        Student student = new Student();
-        student.setId(studentId);
-        
-        // Mocking studentRepository behavior
-        when(studentRepository.findById(studentId)).thenReturn(Optional.of(student));
+        Student mockStudent = new Student();
+        when(studentRepository.findById(studentId)).thenReturn(Optional.of(mockStudent));
 
         // Calling the method under test
         Student result = studentService.getStudentById(studentId);
 
         // Assertions
-        assertNotNull(result);
-        assertEquals(studentId, result.getId());
+        assertEquals(mockStudent, result);
     }
 
     @Test
     public void testGetStudentById_NotExists() {
         // Prepare data
         long studentId = 1L;
-        
-        // Mocking studentRepository behavior
         when(studentRepository.findById(studentId)).thenReturn(Optional.empty());
 
         // Calling the method under test
@@ -211,7 +203,7 @@ public class StudentServiceTest {
         student.setEmail("john@example.com");
 
         // Mocking userService behavior
-        when(userService.addUser(any(String.class), any(String.class), any(String.class), any(String.class))).thenReturn(true);
+        when(userService.addUser(anyString(), anyString(), anyString(), anyString())).thenReturn(true);
 
         // Calling the method under test
         boolean result = studentService.addStudent(student);
@@ -231,7 +223,7 @@ public class StudentServiceTest {
         student.setEmail("john@example.com");
 
         // Mocking userService behavior to simulate failure
-        when(userService.addUser(any(String.class), any(String.class), any(String.class), any(String.class))).thenReturn(false);
+        when(userService.addUser(anyString(), anyString(), anyString(), anyString())).thenReturn(false);
 
         // Calling the method under test
         boolean result = studentService.addStudent(student);
@@ -242,37 +234,141 @@ public class StudentServiceTest {
     }
 
     @Test
-    public void testGetStudentByEmail() {
+    public void testGetStudentByEmail_Exists() {
         // Prepare data
         String email = "john@example.com";
-        Student student = new Student();
-        student.setEmail(email);
-
-        // Mocking studentRepository behavior
-        when(studentRepository.findByEmail(email)).thenReturn(student);
+        Student mockStudent = new Student();
+        when(studentRepository.findByEmail(email)).thenReturn(mockStudent);
 
         // Calling the method under test
         Student result = studentService.getStudentByEmail(email);
 
         // Assertions
-        assertNotNull(result);
-        assertEquals(email, result.getEmail());
+        assertEquals(mockStudent, result);
     }
 
     @Test
-    public void testDeleteStudent() {
+    public void testGetStudentByEmail_NotExists() {
         // Prepare data
-        long studentId = 1L;
-        Student student = new Student();
-        student.setId(studentId);
-
-        // Mocking studentRepository behavior
-        when(studentRepository.findById(studentId)).thenReturn(Optional.of(student));
+        String email = "john@example.com";
+        when(studentRepository.findByEmail(email)).thenReturn(null);
 
         // Calling the method under test
-        studentService.deleteStudent(studentId);
+        Student result = studentService.getStudentByEmail(email);
 
-        // Verify that the delete method of studentRepository is called
-        verify(studentRepository, times(1)).delete(student);
+        // Assertions
+        assertNull(result);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package com.example.attendancemanagement.service;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@SpringBootTest
+public class AttendanceServiceTest {
+
+    @InjectMocks
+    private AttendanceService attendanceService;
+
+    @Mock
+    private AttendanceRepository attendanceRepository;
+
+    @Mock
+    private StudentService studentService;
+
+    @Test
+    public void testMarkAttendance_Success() {
+        // Prepare data
+        long studentId = 1L;
+        LocalDate date = LocalDate.now();
+        boolean present = true;
+        Student mockStudent = new Student();
+        when(studentService.getStudentById(studentId)).thenReturn(mockStudent);
+
+        // Calling the method under test
+        attendanceService.markAttendance(studentId, date, present);
+
+        // Verify interactions
+        verify(attendanceRepository, times(1)).save(any(Attendance.class));
+    }
+
+    @Test
+    public void testMarkAttendance_Exception() {
+        // Prepare data
+        long studentId = 1L;
+        LocalDate date = LocalDate.now();
+        boolean present = true;
+        when(studentService.getStudentById(studentId)).thenThrow(new RuntimeException("Student not found"));
+
+        // Calling the method under test
+        assertThrows(RuntimeException.class, () -> {
+            attendanceService.markAttendance(studentId, date, present);
+        });
+
+        // Verify interactions
+        verify(attendanceRepository, never()).save(any(Attendance.class));
+    }
+
+    @Test
+    public void testGetStudentAttendance() {
+        // Prepare data
+        long studentId = 1L;
+        List<Attendance> mockAttendanceList = new ArrayList<>();
+        when(attendanceRepository.findByStudentId(studentId)).thenReturn(mockAttendanceList);
+
+        // Calling the method under test
+        List<Attendance> result = attendanceService.getStudentAttendance(studentId);
+
+        // Assertions
+        assertEquals(mockAttendanceList, result);
+    }
+
+    @Test
+    public void testCalculateAttendancePercentage() {
+        // Prepare data
+        long studentId = 1L;
+        List<Attendance> mockAttendanceList = new ArrayList<>();
+        mockAttendanceList.add(new Attendance(true));
+        mockAttendanceList.add(new Attendance(false));
+        when(attendanceRepository.findByStudentId(studentId)).thenReturn(mockAttendanceList);
+
+        // Calling the method under test
+        double result = attendanceService.calculateAttendancePercentage(studentId);
+
+        // Assertions
+        assertEquals(50.0, result);
+    }
+}
+
+
+
+
+
+
+
+
+
+
